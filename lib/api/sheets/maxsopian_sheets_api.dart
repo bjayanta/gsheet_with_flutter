@@ -52,4 +52,46 @@ class MaxsopianSheetApi {
 
     return lastRow == null ? 0 : int.tryParse(lastRow.first) ?? 0;
   }
+
+  static Future getById(int id) async {
+    if(_maxsopianSheet == null) return null;
+
+    final json = await _maxsopianSheet!.values.map.rowByKey(id, fromColumn: 1);
+
+    return json == null ? null : Maxsopian.fromJson(json);
+  }
+
+  static Future<List<Maxsopian>> getAll() async {
+    if(_maxsopianSheet == null) return <Maxsopian>[];
+
+    final maxsopian = await _maxsopianSheet!.values.map.allRows();
+
+    return maxsopian == null ? <Maxsopian>[] : maxsopian.map(Maxsopian.fromJson).toList();
+  }
+
+  static Future<bool> update(int id, Map<String, dynamic> maxsopian) async {
+    if(_maxsopianSheet == null) return false;
+    
+    return _maxsopianSheet!.values.map.insertRowByKey(id, maxsopian);
+  }
+
+  static Future<bool> updateCell({required int id, required String key, required dynamic value}) async {
+    if(_maxsopianSheet == null) return false;
+
+    return _maxsopianSheet!.values.insertValueByKeys(
+        value,
+        columnKey: key,
+        rowKey: id
+    );
+  }
+
+  static Future<bool> deleteById(int id) async {
+    if(_maxsopianSheet == null) return false;
+
+    final index = await _maxsopianSheet!.values.rowIndexOf(id);
+
+    if (index == -1) return false;
+
+    return _maxsopianSheet!.deleteRow(index);
+  }
 }

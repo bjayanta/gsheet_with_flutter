@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class MaxsopianFields {
   static final String id = 'id';
   static final String name = 'name';
@@ -35,6 +37,14 @@ class Maxsopian {
       email: email ?? this.email,
       mobile: mobile ?? this.mobile,
       isIntern: isIntern ?? this.isIntern
+  );
+  
+  static Maxsopian fromJson(Map<String, dynamic> json) => Maxsopian(
+      id: jsonDecode(json[MaxsopianFields.id]),
+      name: json[MaxsopianFields.name],
+      email: json[MaxsopianFields.email],
+      mobile: json[MaxsopianFields.mobile],
+      isIntern: jsonDecode(json[MaxsopianFields.isIntern]),
   );
 
   Map<String, dynamic> toJson() => {
